@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-export default class ErrorBoundary extends React.Component {
+export class ErrorBoundary extends React.Component {
 	state = { error: null }
 	static getDerivedStateFromError(error) {
 		return { error }

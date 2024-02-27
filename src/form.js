@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { useFormStatus } from 'react-dom'
-import ErrorBoundary from './ErrorBoundary.js'
+import { ErrorBoundary } from './error-boundary.js'
 
 const h = React.createElement
 

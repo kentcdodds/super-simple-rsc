@@ -3,7 +3,7 @@ import { use, Suspense, useState, startTransition } from 'react'
 import ReactDOM from 'react-dom/client'
 import { createFromFetch, encodeReply } from 'react-server-dom-esm/client'
 
-const moduleBaseURL = '/src/'
+const moduleBaseURL = '/src'
 let updateRoot
 async function callServer(id, args) {
 	const response = fetch('/', {

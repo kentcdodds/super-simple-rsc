@@ -1,11 +1,11 @@
 import * as React from 'react'
 
-import Button from './Button.js'
-import Form from './Form.js'
+import Button from './button.js'
+import Form from './form.js'
 
 import { like, greet } from './actions.js'
 
-import { getServerState } from './ServerState.js'
+import { getServerState } from './server-state.js'
 
 const h = React.createElement
 

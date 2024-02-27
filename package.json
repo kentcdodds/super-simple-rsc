@@ -8,10 +8,10 @@
   "scripts": {
     "dev": "concurrently npm:dev:*",
     "dev:global": "node --watch server/global",
-    "dev:region": "node --watch --experimental-loader ./loader/region.js --conditions=react-server server/region",
+    "dev:region": "node --watch --import ./loader/register-region.js --conditions=react-server server/region",
     "start": "concurrently npm:start:*",
     "start:global": "node server/global",
-    "start:region": "node --experimental-loader ./loader/region.js --conditions=react-server server/region"
+    "start:region": "node --import ./loader/register-region.js --conditions=react-server server/region"
   },
   "imports": {
     "react-server-dom-esm": "./built_node_modules/react-server-dom-esm",

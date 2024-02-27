@@ -88,7 +88,7 @@ app.post('/', bodyParser.text(), async function (req, res) {
 			// Wait for any mutations
 			await action()
 		} catch (x) {
-			const { setServerState } = await import('../src/ServerState.js')
+			const { setServerState } = await import('../src/server-state.js')
 			setServerState('Error: ' + x.message)
 		}
 		renderApp(res, null)
@@ -109,7 +109,7 @@ app.get('/todos', function (req, res) {
 })
 
 app.listen(3001, () => {
-	console.log('Regional Flight Server listening on port 3001...')
+	console.log('✅ RSC Server http://localhost:3001')
 })
 
 app.on('error', function (error) {

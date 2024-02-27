@@ -1,9 +1,6 @@
 // This is a server to host CDN distributed resources like module source files and SSR
 
 import path from 'path'
-import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
-
 import { promises as fs } from 'fs'
 import compress from 'compression'
 import chalk from 'chalk'
@@ -91,7 +88,7 @@ app.all('/', async function (req, res, next) {
 						'react-dom': 'https://esm.sh/react-dom@experimental?pin=v124&dev',
 						'react-dom/': 'https://esm.sh/react-dom@experimental&pin=v124&dev/',
 						'react-server-dom-esm/client':
-							'/node_modules/react-server-dom-esm/esm/react-server-dom-esm-client.browser.development.js',
+							'/built_node_modules/react-server-dom-esm/esm/react-server-dom-esm-client.browser.development.js',
 					},
 				},
 				bootstrapModules: ['/src/index.js'],
@@ -126,12 +123,12 @@ app.all('/', async function (req, res, next) {
 app.use(express.static('public'))
 app.use('/src', express.static('src'))
 app.use(
-	'/node_modules/react-server-dom-esm/esm',
-	express.static('node_modules/react-server-dom-esm/esm'),
+	'/built_node_modules/react-server-dom-esm/esm',
+	express.static('built_node_modules/react-server-dom-esm/esm'),
 )
 
 app.listen(3000, () => {
-	console.log('Global Fizz Server listening on port 3000...')
+	console.log('✅ App Server: http://localhost:3000')
 })
 
 app.on('error', function (error) {

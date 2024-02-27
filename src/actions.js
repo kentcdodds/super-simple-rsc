@@ -1,6 +1,6 @@
 'use server'
 
-import { setServerState } from './ServerState.js'
+import { setServerState } from './server-state.js'
 
 export async function like() {
 	setServerState('Liked!')

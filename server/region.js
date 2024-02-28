@@ -14,6 +14,12 @@ const app = express()
 import compress from 'compression'
 
 app.use(compress())
+// add cors temporarily... Remove this
+app.use((req, res, next) => {
+	res.setHeader('Access-Control-Allow-Origin', '*')
+	res.setHeader('Access-Control-Allow-Headers', '*')
+	next()
+})
 
 // Application
 
@@ -84,28 +90,34 @@ app.post('/', bodyParser.text(), async function (req, res) {
 		})
 		const formData = await fakeRequest.formData()
 		const action = await decodeAction(formData, moduleBasePath)
-		try {
-			// Wait for any mutations
-			await action()
-		} catch (x) {
-			const { setServerState } = await import('../src/server-state.js')
-			setServerState('Error: ' + x.message)
-		}
+		// Wait for any mutations
+		await action()
 		renderApp(res, null)
 	}
 })
 
-app.get('/todos', function (req, res) {
-	res.json([
-		{
-			id: 1,
-			text: 'Shave yaks',
-		},
-		{
-			id: 2,
-			text: 'Eat kale',
-		},
-	])
+app.get('/api/get-ship', async function (req, res) {
+	const { getShip } = await import('../db/ship-api.js')
+	const searchParams = new URLSearchParams(req.url.split('?')[1])
+	const delay = searchParams.get('delay')
+	getShip({
+		name: searchParams.get('name'),
+		delay: delay === null ? undefined : Number(delay),
+	})
+		.then(ship => res.json(ship))
+		.catch(error => res.status(500).send(error.message))
+})
+
+app.get('/api/search-ships', async function (req, res) {
+	const { searchShips } = await import('../db/ship-api.js')
+	const searchParams = new URLSearchParams(req.url.split('?')[1])
+	const delay = searchParams.get('delay')
+	searchShips({
+		query: searchParams.get('query'),
+		delay: delay === null ? undefined : Number(delay),
+	})
+		.then(ship => res.json(ship))
+		.catch(error => res.status(500).send(error.message))
 })
 
 app.listen(3001, () => {

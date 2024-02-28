@@ -82,6 +82,9 @@ app.all('/', async function (req, res, next) {
 						react: 'https://esm.sh/react@experimental?pin=v124&dev',
 						'react-dom': 'https://esm.sh/react-dom@experimental?pin=v124&dev',
 						'react-dom/': 'https://esm.sh/react-dom@experimental&pin=v124&dev/',
+						'react-error-boundary':
+							'https://esm.sh/react-error-boundary@4.0.12?pin=124&dev',
+						'spin-delay': 'https://esm.sh/spin-delay@1.2.0?pin=124&dev',
 						'react-server-dom-esm/client':
 							'/built_node_modules/react-server-dom-esm/esm/react-server-dom-esm-client.browser.development.js',
 					},
@@ -117,10 +120,7 @@ app.all('/', async function (req, res, next) {
 
 app.use(express.static('public'))
 app.use('/src', express.static('src'))
-app.use(
-	'/built_node_modules/react-server-dom-esm/esm',
-	express.static('built_node_modules/react-server-dom-esm/esm'),
-)
+app.use('/built_node_modules', express.static('built_node_modules'))
 
 app.listen(3000, () => {
 	console.log('✅ SSR: http://localhost:3000')

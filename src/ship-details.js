@@ -3,6 +3,7 @@ import { getImageUrlForShip } from './utils.js'
 import { getShip } from '../db/ship-api.js'
 import { ShipImg } from './img.js'
 import { asyncLocalStorage } from '../server/region-async-storage.js'
+import { EditableText } from './edit-text.js'
 
 export async function ShipDetails() {
 	const { shipName } = asyncLocalStorage.getStore()
@@ -22,10 +23,16 @@ export async function ShipDetails() {
 			h(
 				'h2',
 				null,
-				ship.name,
-				h('sup', null, ship.topSpeed, ' ', h('small', null, 'lyh')),
+				h(EditableText, {
+					key: shipName,
+					initialValue: ship.name,
+					inputLabel: 'Ship Name',
+					buttonLabel: 'Ship Name',
+					fieldName: 'shipName',
+				}),
 			),
 		),
+		h('div', null, 'Top Speed: ', ship.topSpeed, ' ', h('small', null, 'lyh')),
 		h(
 			'section',
 			null,
@@ -70,11 +77,8 @@ export function ShipFallback() {
 				alt: shipName,
 			}),
 		),
-		h(
-			'section',
-			null,
-			h('h2', null, shipName, h('sup', null, 'XX ', h('small', null, 'lyh'))),
-		),
+		h('section', null, h('h2', null, shipName)),
+		h('div', null, 'Top Speed: XX', ' ', h('small', null, 'lyh')),
 		h(
 			'section',
 			null,

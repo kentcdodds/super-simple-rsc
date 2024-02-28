@@ -2,6 +2,46 @@ import { createElement as h } from 'react'
 import { getImageUrlForShip } from './utils.js'
 import { getShip } from '../db/ship-api.js'
 
+export function ShipFallback({ shipName }) {
+	return h(
+		'div',
+		{ className: 'ship-info' },
+		h(
+			'div',
+			{ className: 'ship-info__img-wrapper' },
+			h('img', {
+				src: getImageUrlForShip(shipName, {
+					size: 200,
+				}),
+				alt: shipName,
+			}),
+		),
+		h(
+			'section',
+			null,
+			h('h2', null, shipName, h('sup', null, 'XX ', h('small', null, 'lyh'))),
+		),
+		h(
+			'section',
+			null,
+			h(
+				'ul',
+				null,
+				Array.from({ length: 3 }).map((_, i) =>
+					h(
+						'li',
+						{ key: i },
+						h('label', null, 'loading'),
+						':',
+						' ',
+						h('span', null, 'XX ', h('small', null, '(loading)')),
+					),
+				),
+			),
+		),
+	)
+}
+
 export async function ShipDetails({ shipName }) {
 	const shipImgSrc = getImageUrlForShip(shipName, {
 		size: 200,

@@ -50,9 +50,8 @@ export function imgSrc(src) {
 }
 
 function preloadImage(src) {
-	if (typeof document === 'undefined') {
-		return Promise.resolve(src)
-	}
+	if (typeof document === 'undefined') return Promise.resolve(src)
+
 	return new Promise(async (resolve, reject) => {
 		const img = new Image()
 		img.src = src

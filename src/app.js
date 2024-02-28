@@ -4,12 +4,10 @@ import { ErrorBoundary } from './error-boundary.js'
 import { ShipDetails, ShipFallback, ShipError } from './ship-details.js'
 
 export async function App() {
-	const shipName = 'Dreadyacht'
+	const shipName = 'Cargo Ship'
 	return h(
 		'html',
-		{
-			lang: 'en',
-		},
+		{ lang: 'en' },
 		h(
 			'head',
 			null,

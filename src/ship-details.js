@@ -1,11 +1,10 @@
 import { createElement as h } from 'react'
 import { getImageUrlForShip } from './utils.js'
 import { getShip } from '../db/ship-api.js'
+import { ShipImg } from './img.js'
 
 export async function ShipDetails({ shipName }) {
-	const shipImgSrc = getImageUrlForShip(shipName, {
-		size: 200,
-	})
+	const shipImgSrc = getImageUrlForShip(shipName, { size: 200 })
 	const ship = await getShip({ name: shipName })
 	return h(
 		'div',
@@ -13,7 +12,7 @@ export async function ShipDetails({ shipName }) {
 		h(
 			'div',
 			{ className: 'ship-info__img-wrapper' },
-			h('img', { src: shipImgSrc, alt: ship.name }),
+			h(ShipImg, { src: shipImgSrc, alt: ship.name }),
 		),
 		h(
 			'section',
@@ -62,7 +61,7 @@ export function ShipFallback({ shipName }) {
 		h(
 			'div',
 			{ className: 'ship-info__img-wrapper' },
-			h('img', {
+			h(ShipImg, {
 				src: getImageUrlForShip(shipName, {
 					size: 200,
 				}),

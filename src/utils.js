@@ -60,8 +60,6 @@ function preloadImage(src) {
 	})
 }
 
-export function getImageUrlForShip(shipName, { size }) {
-	return `/img/ships/${shipName
-		.toLowerCase()
-		.replaceAll(' ', '-')}.webp?size=${size}`
+export function getImageUrlForShip(shipId, { size }) {
+	return `/img/ships/${shipId}.webp?size=${size}`
 }

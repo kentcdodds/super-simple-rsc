@@ -4,11 +4,12 @@ import { getShip } from '../db/ship-api.js'
 import { ShipImg } from './img.js'
 import { asyncLocalStorage } from '../server/region-async-storage.js'
 import { EditableText } from './edit-text.js'
+import { updateShipName } from './actions.js'
 
 export async function ShipDetails() {
-	const { shipName } = asyncLocalStorage.getStore()
-	const shipImgSrc = getImageUrlForShip(shipName, { size: 200 })
-	const ship = await getShip({ name: shipName })
+	const { shipId } = asyncLocalStorage.getStore()
+	const ship = await getShip({ shipId })
+	const shipImgSrc = getImageUrlForShip(ship.id, { size: 200 })
 	return h(
 		'div',
 		{ className: 'ship-info' },
@@ -24,11 +25,10 @@ export async function ShipDetails() {
 				'h2',
 				null,
 				h(EditableText, {
-					key: shipName,
+					key: shipId,
+					shipId,
+					action: updateShipName,
 					initialValue: ship.name,
-					inputLabel: 'Ship Name',
-					buttonLabel: 'Ship Name',
-					fieldName: 'shipName',
 				}),
 			),
 		),
@@ -63,7 +63,7 @@ export async function ShipDetails() {
 }
 
 export function ShipFallback() {
-	const { shipName } = asyncLocalStorage.getStore()
+	const { shipId } = asyncLocalStorage.getStore()
 	return h(
 		'div',
 		{ className: 'ship-info' },
@@ -71,13 +71,14 @@ export function ShipFallback() {
 			'div',
 			{ className: 'ship-info__img-wrapper' },
 			h(ShipImg, {
-				src: getImageUrlForShip(shipName, {
+				src: getImageUrlForShip(shipId, {
 					size: 200,
 				}),
-				alt: shipName,
+				// TODO: handle this better
+				alt: shipId,
 			}),
 		),
-		h('section', null, h('h2', null, shipName)),
+		h('section', null, h('h2', null, 'Loading...')),
 		h('div', null, 'Top Speed: XX', ' ', h('small', null, 'lyh')),
 		h(
 			'section',
@@ -101,7 +102,7 @@ export function ShipFallback() {
 }
 
 export function ShipError() {
-	const { shipName } = asyncLocalStorage.getStore()
+	const { shipId } = asyncLocalStorage.getStore()
 	return h(
 		'div',
 		{ className: 'ship-info' },
@@ -111,6 +112,6 @@ export function ShipError() {
 			h('img', { src: '/img/broken-ship.webp', alt: 'broken ship' }),
 		),
 		h('section', null, h('h2', null, 'There was an error')),
-		h('section', null, 'There was an error loading "', shipName, '"'),
+		h('section', null, 'There was an error loading "', shipId, '"'),
 	)
 }

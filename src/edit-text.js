@@ -1,7 +1,7 @@
 'use client'
 
 import { createElement as h, useRef, useState } from 'react'
-import { flushSync } from 'react-dom'
+import { useFormStatus, useFormState, flushSync } from 'react-dom'
 
 const inheritStyles = {
 	fontSize: 'inherit',
@@ -11,15 +11,10 @@ const inheritStyles = {
 	textAlign: 'inherit',
 }
 
-export function EditableText({
-	id,
-	initialValue = '',
-	fieldName,
-	inputLabel,
-	buttonLabel,
-}) {
+export function EditableText({ id, shipId, action, initialValue = '' }) {
 	const [edit, setEdit] = useState(false)
 	const [value, setValue] = useState(initialValue)
+	const [formState, formAction] = useFormState(action, null)
 	const inputRef = useRef(null)
 	const buttonRef = useRef(null)
 	return edit
@@ -27,22 +22,23 @@ export function EditableText({
 				'form',
 				{
 					method: 'post',
+					action: formAction,
 					onSubmit: event => {
-						event.preventDefault()
-						flushSync(() => {
-							setValue(inputRef.current?.value ?? '')
-							setEdit(false)
-						})
-						buttonRef.current?.focus()
+						setValue(inputRef.current?.value ?? '')
 					},
 				},
+				h('input', {
+					type: 'hidden',
+					name: 'shipId',
+					value: shipId,
+				}),
 				h('input', {
 					required: true,
 					ref: inputRef,
 					type: 'text',
 					id: id,
-					'aria-label': inputLabel,
-					name: fieldName,
+					'aria-label': 'Ship Name',
+					name: 'shipName',
 					defaultValue: value,
 					style: {
 						border: 'none',
@@ -57,19 +53,35 @@ export function EditableText({
 							buttonRef.current?.focus()
 						}
 					},
-					onBlur: event => {
-						flushSync(() => {
-							setValue(event.currentTarget.value)
-							setEdit(false)
-						})
-						buttonRef.current?.focus()
-					},
 				}),
+				h(
+					'div',
+					{ style: { display: 'flex', gap: 2, justifyContent: 'center' } },
+					h(
+						'button',
+						{ type: 'button', onClick: () => setEdit(false) },
+						'Done editing',
+					),
+					h(PendingButton),
+				),
+				formState
+					? h(
+							'div',
+							{
+								style: {
+									color: formState.status === 'error' ? 'red' : 'green',
+									fontSize: '0.75rem',
+									fontWeight: 'normal',
+								},
+							},
+							formState.message,
+						)
+					: null,
 			)
 		: h(
 				'button',
 				{
-					'aria-label': buttonLabel,
+					'aria-label': 'Ship Name',
 					ref: buttonRef,
 					type: 'button',
 					style: {
@@ -86,4 +98,10 @@ export function EditableText({
 				},
 				value || 'Edit',
 			)
+}
+
+function PendingButton() {
+	const { pending, data, method, action } = useFormStatus()
+
+	return h('button', { type: 'submit' }, pending ? '...' : 'Submit')
 }

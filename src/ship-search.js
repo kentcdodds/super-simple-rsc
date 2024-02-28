@@ -11,10 +11,12 @@ import { ErrorBoundary } from './error-boundary.js'
 import { getImageUrlForShip } from './utils.js'
 import { ShipImg } from './img.js'
 import { RefreshRootContext } from './refresh.js'
+import { useSpinDelay } from './spin-delay.js'
 
 export function ShipSearch({ search, results, fallback }) {
 	const refreshRoot = use(RefreshRootContext)
-	const [isPending, startTransition] = useTransition()
+	const [isTransitionPending, startTransition] = useTransition()
+	const isPending = useSpinDelay(isTransitionPending)
 	return h(
 		Fragment,
 		null,
@@ -46,11 +48,11 @@ export function ShipSearch({ search, results, fallback }) {
 	)
 }
 
-export function SelectShipButton({ shipName, highlight, children }) {
+export function SelectShipButton({ shipId, highlight, children }) {
 	const refreshRoot = use(RefreshRootContext)
 	return h('button', {
 		children,
 		style: { fontWeight: highlight ? 'bold' : 'normal' },
-		onClick: () => refreshRoot({ shipName }),
+		onClick: () => refreshRoot({ shipId }),
 	})
 }

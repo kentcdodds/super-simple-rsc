@@ -14,12 +14,6 @@ const app = express()
 import compress from 'compression'
 
 app.use(compress())
-// add cors temporarily... Remove this
-app.use((req, res, next) => {
-	res.setHeader('Access-Control-Allow-Origin', '*')
-	res.setHeader('Access-Control-Allow-Headers', '*')
-	next()
-})
 
 // Application
 
@@ -32,9 +26,9 @@ async function renderApp(res, returnValue) {
 	const { renderToPipeableStream } = await import('react-server-dom-esm/server')
 	const { Document } = await import('../src/app.js')
 
-	const shipName = res.req.query.shipName || 'Dreadnought'
+	const shipId = res.req.query.shipId || '6c86fca8b9086'
 	const search = res.req.query.search || ''
-	asyncLocalStorage.run({ shipName, search }, () => {
+	asyncLocalStorage.run({ shipId, search }, () => {
 		const root = h(Document)
 		// For client-invoked server actions we refresh the tree and return a return value.
 		const payload = returnValue ? { returnValue, root } : root

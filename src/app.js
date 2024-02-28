@@ -28,7 +28,7 @@ export async function Document() {
 }
 
 export function App() {
-	const { shipName, search } = asyncLocalStorage.getStore()
+	const { shipId, search } = asyncLocalStorage.getStore()
 	return h(
 		'div',
 		{ className: 'app' },
@@ -64,7 +64,7 @@ export function App() {
 					h(
 						ErrorBoundary,
 						{ fallback: h(ShipError) },
-						shipName
+						shipId
 							? h(Suspense, { fallback: h(ShipFallback) }, h(ShipDetails))
 							: h('p', null, 'Select a ship from the list to see details'),
 					),

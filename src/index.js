@@ -11,10 +11,12 @@ import { createFromFetch, encodeReply } from 'react-server-dom-esm/client'
 import { RefreshRootContext } from './refresh.js'
 import { ShipDetailsPendingContext } from './ship-details-pending.js'
 
+let state = {}
 const moduleBaseURL = '/src'
 let updateRoot
 async function callServer(id, args) {
-	const response = fetch('/', {
+	const params = new URLSearchParams(state)
+	const response = fetch(`/?${params}`, {
 		method: 'POST',
 		headers: {
 			Accept: 'text/x-component',
@@ -33,7 +35,6 @@ async function callServer(id, args) {
 	return returnValue
 }
 
-let state = {}
 // to avoid having to do this fetch to hydrate the app, you can use this:
 // https://github.com/devongovett/rsc-html-stream
 const serializedJsx = refresh()
@@ -65,7 +66,7 @@ function Shell({ serializedJsx }) {
 					// 😆 not sure how to manage this better. The question is: how do I be
 					// more fine-grained about what's getting updated?
 					const wrapper =
-						'shipName' in updates ? startShipDetailsTransition : cb => cb()
+						'shipId' in updates ? startShipDetailsTransition : cb => cb()
 					const updatedData = await refresh()
 					wrapper(() => {
 						startTransition(() => {

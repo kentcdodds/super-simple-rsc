@@ -2,7 +2,7 @@ import { createElement as h, Suspense } from 'react'
 import { ErrorBoundary } from './error-boundary.js'
 import { ShipDetails, ShipFallback, ShipError } from './ship-details.js'
 import { ShipSearch } from './ship-search.js'
-import { SearchResults } from './ship-search-results.js'
+import { SearchResults, SearchResultsFallback } from './ship-search-results.js'
 
 const shipFallbackSrc = '/img/fallback-ship.png'
 
@@ -53,6 +53,7 @@ export async function App({ shipName, search }) {
 								h(ShipSearch, {
 									search,
 									results: h(SearchResults, { search }),
+									fallback: h(SearchResultsFallback),
 								}),
 							),
 							h(

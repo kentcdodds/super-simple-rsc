@@ -3,6 +3,8 @@ import { getImageUrlForShip } from './utils.js'
 import { searchShips } from '../db/ship-api.js'
 import { ShipImg } from './img.js'
 
+const shipFallbackSrc = '/img/fallback-ship.png'
+
 export async function SearchResults({ search }) {
 	const shipResults = await searchShips({ query: search })
 	return shipResults.ships.map(ship =>
@@ -19,6 +21,26 @@ export async function SearchResults({ search }) {
 					alt: ship.name,
 				}),
 				ship.name,
+			),
+		),
+	)
+}
+
+export function SearchResultsFallback() {
+	return Array.from({
+		length: 12,
+	}).map((_, i) =>
+		h(
+			'li',
+			{ key: i },
+			h(
+				'button',
+				null,
+				h('img', {
+					src: shipFallbackSrc,
+					alt: 'loading',
+				}),
+				'... loading',
 			),
 		),
 	)

@@ -1,29 +1,33 @@
 'use client'
 
-import { createElement as h, Fragment, Suspense } from 'react'
+import {
+	createElement as h,
+	Fragment,
+	Suspense,
+	use,
+	useTransition,
+} from 'react'
 import { ErrorBoundary } from './error-boundary.js'
 import { getImageUrlForShip } from './utils.js'
 import { ShipImg } from './img.js'
+import { RefreshRootContext } from './refresh.js'
 
-const shipFallbackSrc = '/img/fallback-ship.png'
-
-export function ShipSearch({ results, search }) {
+export function ShipSearch({ search, results, fallback }) {
+	const refreshRoot = use(RefreshRootContext)
+	const [isPending, startTransition] = useTransition()
 	return h(
 		Fragment,
 		null,
-		h(
-			'div',
-			null,
-			h('input', {
-				placeholder: 'Filter ships...',
-				type: 'search',
-				defaultValue: search,
-				onChange: e => {
-					// how do I call updateRoot here?
-					console.log(e.currentTarget.value)
-				},
-			}),
-		),
+		h('input', {
+			placeholder: 'Filter ships...',
+			type: 'search',
+			defaultValue: search,
+			onChange: e => {
+				startTransition(() => {
+					refreshRoot({ search: e.currentTarget.value })
+				})
+			},
+		}),
 		h(
 			ErrorBoundary,
 			{
@@ -35,28 +39,8 @@ export function ShipSearch({ results, search }) {
 			},
 			h(
 				'ul',
-				null,
-				h(Suspense, { fallback: h(SearchResultsFallback) }, results),
-			),
-		),
-	)
-}
-
-function SearchResultsFallback() {
-	return Array.from({
-		length: 12,
-	}).map((_, i) =>
-		h(
-			'li',
-			{ key: i },
-			h(
-				'button',
-				null,
-				h('img', {
-					src: shipFallbackSrc,
-					alt: 'loading',
-				}),
-				'... loading',
+				{ style: { opacity: isPending ? 0.6 : 1 } },
+				h(Suspense, { fallback }, results),
 			),
 		),
 	)

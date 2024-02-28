@@ -1,7 +1,13 @@
-import * as React from 'react'
-import { use, Suspense, useState, startTransition } from 'react'
+import {
+	createElement as h,
+	use,
+	Suspense,
+	useState,
+	startTransition,
+} from 'react'
 import ReactDOM from 'react-dom/client'
 import { createFromFetch, encodeReply } from 'react-server-dom-esm/client'
+import { RefreshRootContext } from './refresh.js'
 
 const moduleBaseURL = '/src'
 let updateRoot
@@ -25,17 +31,24 @@ async function callServer(id, args) {
 	return returnValue
 }
 
-const data = createFromFetch(
-	fetch(location.pathname + location.search, {
-		headers: {
-			Accept: 'text/x-component',
+const data = refresh()
+
+function refresh({ search, shipName } = {}) {
+	const params = new URLSearchParams()
+	if (search) params.set('search', search)
+	if (shipName) params.set('shipName', shipName)
+	return createFromFetch(
+		fetch(`/?${params}`, {
+			headers: {
+				Accept: 'text/x-component',
+			},
+		}),
+		{
+			callServer,
+			moduleBaseURL,
 		},
-	}),
-	{
-		callServer,
-		moduleBaseURL,
-	},
-)
+	)
+}
 
 function Shell({ data }) {
 	const [root, setRoot] = useState(use(data))
@@ -43,4 +56,18 @@ function Shell({ data }) {
 	return root
 }
 
-ReactDOM.hydrateRoot(document, React.createElement(Shell, { data }))
+ReactDOM.hydrateRoot(
+	document,
+	h(
+		RefreshRootContext.Provider,
+		{
+			value: async ({ search }) => {
+				const updatedData = await refresh({ search })
+				startTransition(() => {
+					updateRoot(updatedData)
+				})
+			},
+		},
+		h(Shell, { data }),
+	),
+)

@@ -37,3 +37,9 @@ export async function getShip({ name, delay = Math.random() * 200 + 300 }) {
 		fetchedAt: 'TODO', // formatDate(new Date())
 	}
 }
+
+export async function createShip() {
+	shipData.push({
+		name: 'New Ship',
+	})
+}

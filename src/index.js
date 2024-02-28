@@ -4,10 +4,12 @@ import {
 	Suspense,
 	useState,
 	startTransition,
+	useTransition,
 } from 'react'
 import ReactDOM from 'react-dom/client'
 import { createFromFetch, encodeReply } from 'react-server-dom-esm/client'
 import { RefreshRootContext } from './refresh.js'
+import { ShipDetailsPendingContext } from './ship-details-pending.js'
 
 const moduleBaseURL = '/src'
 let updateRoot
@@ -32,6 +34,8 @@ async function callServer(id, args) {
 }
 
 let state = {}
+// to avoid having to do this fetch to hydrate the app, you can use this:
+// https://github.com/devongovett/rsc-html-stream
 const serializedJsx = refresh()
 
 function refresh() {
@@ -42,32 +46,37 @@ function refresh() {
 				Accept: 'text/x-component',
 			},
 		}),
-		{
-			callServer,
-			moduleBaseURL,
-		},
+		{ callServer, moduleBaseURL },
 	)
 }
 
 function Shell({ serializedJsx }) {
 	const [root, setRoot] = useState(use(serializedJsx))
+	const [isShipDetailsPending, startShipDetailsTransition] = useTransition()
 	updateRoot = setRoot
-	return root
+	return h(
+		ShipDetailsPendingContext.Provider,
+		{ value: isShipDetailsPending },
+		h(
+			RefreshRootContext.Provider,
+			{
+				value: async updates => {
+					state = { ...state, ...updates }
+					// 😆 not sure how to manage this better. The question is: how do I be
+					// more fine-grained about what's getting updated?
+					const wrapper =
+						'shipName' in updates ? startShipDetailsTransition : cb => cb()
+					const updatedData = await refresh()
+					wrapper(() => {
+						startTransition(() => {
+							updateRoot(updatedData)
+						})
+					})
+				},
+			},
+			root,
+		),
+	)
 }
 
-ReactDOM.hydrateRoot(
-	document,
-	h(
-		RefreshRootContext.Provider,
-		{
-			value: async updates => {
-				state = { ...state, ...updates }
-				const updatedData = await refresh()
-				startTransition(() => {
-					updateRoot(updatedData)
-				})
-			},
-		},
-		h(Shell, { serializedJsx }),
-	),
-)
+ReactDOM.hydrateRoot(document, h(Shell, { serializedJsx }))

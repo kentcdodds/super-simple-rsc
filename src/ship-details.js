@@ -52,7 +52,6 @@ export async function ShipDetails() {
 					)
 				: h('p', null, 'NOTE: This ship is not equipped with any weapons.'),
 		),
-		h('small', { className: 'ship-info__fetch-time' }, ship.fetchedAt),
 	)
 }
 

@@ -46,14 +46,11 @@ export function ShipSearch({ search, results, fallback }) {
 	)
 }
 
-export function SelectShipButton({ shipName, children }) {
+export function SelectShipButton({ shipName, highlight, children }) {
 	const refreshRoot = use(RefreshRootContext)
-	const [isPending, startTransition] = useTransition()
 	return h('button', {
 		children,
-		onClick: () =>
-			startTransition(() => {
-				refreshRoot({ shipName })
-			}),
+		style: { fontWeight: highlight ? 'bold' : 'normal' },
+		onClick: () => refreshRoot({ shipName }),
 	})
 }

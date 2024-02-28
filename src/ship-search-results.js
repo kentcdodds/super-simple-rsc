@@ -8,7 +8,7 @@ import { SelectShipButton } from './ship-search.js'
 const shipFallbackSrc = '/img/fallback-ship.png'
 
 export async function SearchResults() {
-	const { search } = asyncLocalStorage.getStore()
+	const { shipName: currentShipName, search } = asyncLocalStorage.getStore()
 	const shipResults = await searchShips({ query: search })
 	return shipResults.ships.map(ship =>
 		h(
@@ -16,11 +16,9 @@ export async function SearchResults() {
 			{ key: ship.name },
 			h(
 				SelectShipButton,
-				{ shipName: ship.name },
+				{ shipName: ship.name, highlight: ship.name === currentShipName },
 				h(ShipImg, {
-					src: getImageUrlForShip(ship.name, {
-						size: 20,
-					}),
+					src: getImageUrlForShip(ship.name, { size: 20 }),
 					alt: ship.name,
 				}),
 				ship.name,
@@ -39,10 +37,7 @@ export function SearchResultsFallback() {
 			h(
 				'button',
 				null,
-				h('img', {
-					src: shipFallbackSrc,
-					alt: 'loading',
-				}),
+				h('img', { src: shipFallbackSrc, alt: 'loading' }),
 				'... loading',
 			),
 		),

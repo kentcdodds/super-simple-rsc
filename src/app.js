@@ -1,7 +1,6 @@
-import * as React from 'react'
+import { createElement as h } from 'react'
 import { App as ClientApp } from './app.client.js'
-
-const h = React.createElement
+import { ShipDetails } from './ship-details.js'
 
 export async function App() {
 	return h(
@@ -20,6 +19,6 @@ export async function App() {
 			h('title', null, 'Super Simple RSC'),
 			h('link', { rel: 'stylesheet', href: '/src/style.css' }),
 		),
-		h('body', null, h(ClientApp)),
+		h('body', null, h(ShipDetails, { shipName: 'Dreadnought' })),
 	)
 }

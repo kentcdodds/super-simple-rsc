@@ -32,5 +32,8 @@ export async function getShip({ name, delay = Math.random() * 200 + 300 }) {
 	if (!ship) {
 		throw new Error(`No ship with the name "${name}"`)
 	}
-	return { ...ship, fetchedAt: formatDate(new Date()) }
+	return {
+		...ship,
+		fetchedAt: 'TODO', // formatDate(new Date())
+	}
 }

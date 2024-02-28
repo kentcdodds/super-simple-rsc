@@ -45,3 +45,15 @@ export function ShipSearch({ search, results, fallback }) {
 		),
 	)
 }
+
+export function SelectShipButton({ shipName, children }) {
+	const refreshRoot = use(RefreshRootContext)
+	const [isPending, startTransition] = useTransition()
+	return h('button', {
+		children,
+		onClick: () =>
+			startTransition(() => {
+				refreshRoot({ shipName })
+			}),
+	})
+}

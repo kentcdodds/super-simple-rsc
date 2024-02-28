@@ -31,12 +31,11 @@ async function callServer(id, args) {
 	return returnValue
 }
 
-const data = refresh()
+let state = {}
+const serializedJsx = refresh()
 
-function refresh({ search, shipName } = {}) {
-	const params = new URLSearchParams()
-	if (search) params.set('search', search)
-	if (shipName) params.set('shipName', shipName)
+function refresh() {
+	const params = new URLSearchParams(state)
 	return createFromFetch(
 		fetch(`/?${params}`, {
 			headers: {
@@ -50,8 +49,8 @@ function refresh({ search, shipName } = {}) {
 	)
 }
 
-function Shell({ data }) {
-	const [root, setRoot] = useState(use(data))
+function Shell({ serializedJsx }) {
+	const [root, setRoot] = useState(use(serializedJsx))
 	updateRoot = setRoot
 	return root
 }
@@ -61,13 +60,14 @@ ReactDOM.hydrateRoot(
 	h(
 		RefreshRootContext.Provider,
 		{
-			value: async ({ search }) => {
-				const updatedData = await refresh({ search })
+			value: async updates => {
+				state = { ...state, ...updates }
+				const updatedData = await refresh()
 				startTransition(() => {
 					updateRoot(updatedData)
 				})
 			},
 		},
-		h(Shell, { data }),
+		h(Shell, { serializedJsx }),
 	),
 )

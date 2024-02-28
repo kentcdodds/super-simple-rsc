@@ -3,10 +3,12 @@ import { ErrorBoundary } from './error-boundary.js'
 import { ShipDetails, ShipFallback, ShipError } from './ship-details.js'
 import { ShipSearch } from './ship-search.js'
 import { SearchResults, SearchResultsFallback } from './ship-search-results.js'
+import { asyncLocalStorage } from '../server/region-async-storage.js'
 
 const shipFallbackSrc = '/img/fallback-ship.png'
 
-export async function App({ shipName, search }) {
+export async function App() {
+	const { shipName, search } = asyncLocalStorage.getStore()
 	return h(
 		'html',
 		{ lang: 'en' },
@@ -61,13 +63,9 @@ export async function App({ shipName, search }) {
 								{ className: 'details' },
 								h(
 									ErrorBoundary,
-									{ fallback: h(ShipError, { shipName }) },
+									{ fallback: h(ShipError) },
 									shipName
-										? h(
-												Suspense,
-												{ fallback: h(ShipFallback, { shipName }) },
-												h(ShipDetails, { shipName }),
-											)
+										? h(Suspense, { fallback: h(ShipFallback) }, h(ShipDetails))
 										: h(
 												'p',
 												null,

@@ -26,7 +26,7 @@ async function callServer(id, args) {
 }
 
 let data = createFromFetch(
-	fetch('/', {
+	fetch(location.pathname + location.search, {
 		headers: {
 			Accept: 'text/x-component',
 		},

@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 
 // Application
 
-import * as React from 'react'
+import { createElement as h } from 'react'
 
 const moduleBasePath = new URL('../src', import.meta.url).href
 
@@ -31,7 +31,10 @@ async function renderApp(res, returnValue) {
 	const { renderToPipeableStream } = await import('react-server-dom-esm/server')
 	const { App } = await import('../src/app.js')
 
-	const root = React.createElement(App)
+	const shipName = res.req.query.shipName
+	const search = res.req.query.search || ''
+
+	const root = h(App, { shipName, search })
 	// For client-invoked server actions we refresh the tree and return a return value.
 	const payload = returnValue ? { returnValue, root } : root
 	const { pipe } = renderToPipeableStream(payload, moduleBasePath)

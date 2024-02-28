@@ -1,5 +1,4 @@
 import { createElement as h, Suspense } from 'react'
-import { App as ClientApp } from './app.client.js'
 import { ErrorBoundary } from './error-boundary.js'
 import { ShipDetails, ShipFallback, ShipError } from './ship-details.js'
 import { ShipSearch } from './ship-search.js'
@@ -7,9 +6,7 @@ import { SearchResults } from './ship-search-results.js'
 
 const shipFallbackSrc = '/img/fallback-ship.png'
 
-export async function App() {
-	const shipName = 'Cargo Ship'
-	const search = 'ca'
+export async function App({ shipName, search }) {
 	return h(
 		'html',
 		{ lang: 'en' },

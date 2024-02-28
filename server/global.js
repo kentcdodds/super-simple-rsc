@@ -50,7 +50,7 @@ app.all('/', async function (req, res, next) {
 			host: '127.0.0.1',
 			port: 3001,
 			method: req.method,
-			path: '/',
+			path: req.url,
 			headers: proxiedHeaders,
 		},
 		req,

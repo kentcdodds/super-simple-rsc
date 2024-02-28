@@ -18,6 +18,10 @@ export function ShipSearch({ results, search }) {
 				placeholder: 'Filter ships...',
 				type: 'search',
 				defaultValue: search,
+				onChange: e => {
+					// how do I call updateRoot here?
+					console.log(e.currentTarget.value)
+				},
 			}),
 		),
 		h(

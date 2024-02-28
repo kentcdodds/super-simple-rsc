@@ -25,7 +25,7 @@ async function callServer(id, args) {
 	return returnValue
 }
 
-let data = createFromFetch(
+const data = createFromFetch(
 	fetch(location.pathname + location.search, {
 		headers: {
 			Accept: 'text/x-component',

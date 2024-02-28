@@ -2,6 +2,9 @@ import { createElement as h, Suspense } from 'react'
 import { App as ClientApp } from './app.client.js'
 import { ErrorBoundary } from './error-boundary.js'
 import { ShipDetails, ShipFallback, ShipError } from './ship-details.js'
+import { ShipSearch } from './ship-search.js'
+
+const shipFallbackSrc = '/img/fallback-ship.png'
 
 export async function App() {
 	const shipName = 'Cargo Ship'
@@ -23,15 +26,59 @@ export async function App() {
 			'body',
 			null,
 			h(
-				ErrorBoundary,
-				{ fallback: h(ShipError, { shipName }) },
-				shipName
-					? h(
+				'div',
+				{ className: 'app-wrapper' },
+				h(
+					'div',
+					{ className: 'app' },
+					h(
+						ErrorBoundary,
+						{
+							fallback: h(
+								'div',
+								{ className: 'app-error' },
+								h('p', null, 'Something went wrong!'),
+							),
+						},
+						h(
 							Suspense,
-							{ fallback: h(ShipFallback, { shipName }) },
-							h(ShipDetails, { shipName }),
-						)
-					: h('p', null, 'Select a ship from the list to see details'),
+							{
+								fallback: h('img', {
+									style: { maxWidth: 400 },
+									src: shipFallbackSrc,
+								}),
+							},
+							h(
+								'div',
+								{ className: 'search' },
+								h(ShipSearch, {
+									onSelection: selection => {
+										startTransition(() => setShipName(selection))
+									},
+								}),
+							),
+							h(
+								'div',
+								{ className: 'details' },
+								h(
+									ErrorBoundary,
+									{ fallback: h(ShipError, { shipName }) },
+									shipName
+										? h(
+												Suspense,
+												{ fallback: h(ShipFallback, { shipName }) },
+												h(ShipDetails, { shipName }),
+											)
+										: h(
+												'p',
+												null,
+												'Select a ship from the list to see details',
+											),
+								),
+							),
+						),
+					),
+				),
 			),
 		),
 	)

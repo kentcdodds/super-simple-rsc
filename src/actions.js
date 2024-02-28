@@ -12,9 +12,8 @@ export async function greet(formData) {
 	setServerState('Hi ' + name)
 	const file = formData.get('file')
 	if (file) {
-		return `Ok, ${name}, here is ${file.name}:
-      ${(await file.text()).toUpperCase()}
-    `
+		const fileText = (await file.text()).toUpperCase()
+		return `Ok, ${name}, here is ${file.name}: ${fileText}`
 	}
 	return 'Hi ' + name + '!'
 }

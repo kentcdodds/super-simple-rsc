@@ -18,7 +18,7 @@ function ButtonDisabledWhilePending({ action, children }) {
 	)
 }
 
-export default function Button({ action, children }) {
+export function Button({ action, children }) {
 	return h(
 		ErrorBoundary,
 		null,

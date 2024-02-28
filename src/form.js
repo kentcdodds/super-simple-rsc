@@ -11,7 +11,7 @@ function Status() {
 	return pending ? 'Saving...' : null
 }
 
-export default function Form({ action, children }) {
+export function Form({ action, children }) {
 	const [isPending, setIsPending] = React.useState(false)
 	return h(
 		ErrorBoundary,

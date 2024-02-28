@@ -66,18 +66,13 @@ app.all('/', async function (req, res, next) {
 			// to load the source files from as well as the URL path for preloads.
 
 			let root
-			let Root = () => {
-				if (root) {
-					return React.use(root)
-				}
-
-				return React.use(
-					(root = createFromNodeStream(
-						rscResponse,
-						moduleBasePath,
-						moduleBaseURL,
-					)),
+			function Root() {
+				root ??= createFromNodeStream(
+					rscResponse,
+					moduleBasePath,
+					moduleBaseURL,
 				)
+				return React.use(root)
 			}
 			// Render it into HTML by resolving the client components
 			res.set('Content-type', 'text/html')
@@ -128,7 +123,7 @@ app.use(
 )
 
 app.listen(3000, () => {
-	console.log('✅ App Server: http://localhost:3000')
+	console.log('✅ SSR: http://localhost:3000')
 })
 
 app.on('error', function (error) {

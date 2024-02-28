@@ -1,3 +1,4 @@
+// The RSC server
 // This is a server to host data-local resources like databases and RSC
 
 import path from 'path'
@@ -22,9 +23,8 @@ const moduleBasePath = new URL('../src', import.meta.url).href
 
 async function renderApp(res, returnValue) {
 	const { renderToPipeableStream } = await import('react-server-dom-esm/server')
-	const m = await import('../src/App.js')
+	const { App } = await import('../src/app.js')
 
-	const App = m.default
 	const root = React.createElement(App)
 	// For client-invoked server actions we refresh the tree and return a return value.
 	const payload = returnValue ? { returnValue, root } : root
@@ -109,7 +109,7 @@ app.get('/todos', function (req, res) {
 })
 
 app.listen(3001, () => {
-	console.log('✅ RSC Server http://localhost:3001')
+	console.log('✅ RSC http://localhost:3001')
 })
 
 app.on('error', function (error) {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import Button from './button.js'
-import Form from './form.js'
+import { Button } from './button.js'
+import { Form } from './form.js'
 
 import { like, greet } from './actions.js'
 
@@ -9,7 +9,7 @@ import { getServerState } from './server-state.js'
 
 const h = React.createElement
 
-export default async function App() {
+export async function App() {
 	const res = await fetch('http://localhost:3001/todos')
 	const todos = await res.json()
 	return h(

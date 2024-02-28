@@ -1,9 +1,10 @@
 import { createElement as h, Suspense } from 'react'
 import { App as ClientApp } from './app.client.js'
-import { ShipDetails, ShipFallback } from './ship-details.js'
+import { ErrorBoundary } from './error-boundary.js'
+import { ShipDetails, ShipFallback, ShipError } from './ship-details.js'
 
 export async function App() {
-	const shipName = 'Dreadnought'
+	const shipName = 'Dreadyacht'
 	return h(
 		'html',
 		{
@@ -24,9 +25,15 @@ export async function App() {
 			'body',
 			null,
 			h(
-				Suspense,
-				{ fallback: h(ShipFallback, { shipName }) },
-				h(ShipDetails, { shipName }),
+				ErrorBoundary,
+				{ fallback: h(ShipError, { shipName }) },
+				shipName
+					? h(
+							Suspense,
+							{ fallback: h(ShipFallback, { shipName }) },
+							h(ShipDetails, { shipName }),
+						)
+					: h('p', null, 'Select a ship from the list to see details'),
 			),
 		),
 	)

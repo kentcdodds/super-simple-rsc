@@ -21,7 +21,6 @@ export function EditableText({ id, shipId, action, initialValue = '' }) {
 		? h(
 				'form',
 				{
-					method: 'post',
 					action: formAction,
 					onSubmit: event => {
 						setValue(inputRef.current?.value ?? '')

@@ -39,9 +39,9 @@ async function callServer(id, args) {
 // https://github.com/devongovett/rsc-html-stream
 const serializedJsx = refresh()
 
-function refresh() {
+async function refresh() {
 	const params = new URLSearchParams(state)
-	return createFromFetch(
+	const root = await createFromFetch(
 		fetch(`/?${params}`, {
 			headers: {
 				Accept: 'text/x-component',
@@ -49,6 +49,7 @@ function refresh() {
 		}),
 		{ callServer, moduleBaseURL },
 	)
+	return root
 }
 
 function Shell({ serializedJsx }) {

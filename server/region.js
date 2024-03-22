@@ -119,8 +119,9 @@ app.get('/api/search-ships', async function (req, res) {
 		.catch(error => res.status(500).send(error.message))
 })
 
-app.listen(3001, () => {
-	console.log('✅ RSC http://localhost:3001')
+const port = process.env.PORT || 3001
+app.listen(port, () => {
+	console.log(`✅ RSC: http://localhost:${port}`)
 })
 
 app.on('error', function (error) {
@@ -130,11 +131,11 @@ app.on('error', function (error) {
 
 	switch (error.code) {
 		case 'EACCES':
-			console.error('port 3001 requires elevated privileges')
+			console.error(`port ${port} requires elevated privileges`)
 			process.exit(1)
 			break
 		case 'EADDRINUSE':
-			console.error('Port 3001 is already in use')
+			console.error(`Port ${port} is already in use`)
 			process.exit(1)
 			break
 		default:

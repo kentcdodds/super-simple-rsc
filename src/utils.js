@@ -1,3 +1,4 @@
+const API_ORIGIN = new URL(process.env.API_ORIGIN)
 const shipCache = new Map()
 
 export function getShip(name, delay) {
@@ -10,7 +11,7 @@ async function getShipImpl(name, delay) {
 	const searchParams = new URLSearchParams({ name })
 	if (delay) searchParams.set('delay', String(delay))
 	const response = await fetch(
-		`http://localhost:3001/api/get-ship?${searchParams.toString()}`,
+		new URL(`/api/get-ship?${searchParams.toString()}`, API_ORIGIN),
 	)
 	if (!response.ok) {
 		return Promise.reject(new Error(await response.text()))
@@ -32,34 +33,11 @@ async function searchShipImpl(query, delay) {
 	const searchParams = new URLSearchParams({ query })
 	if (delay) searchParams.set('delay', String(delay))
 	const response = await fetch(
-		`http://localhost:3001/api/search-ships?${searchParams.toString()}`,
+		new URL(`/api/search-ships?${searchParams.toString()}`, API_ORIGIN),
 	)
 	if (!response.ok) {
 		return Promise.reject(new Error(await response.text()))
 	}
 	const ship = await response.json()
 	return ship
-}
-
-const imgCache = new Map()
-
-export function imgSrc(src) {
-	const imgPromise = imgCache.get(src) ?? preloadImage(src)
-	imgCache.set(src, imgPromise)
-	return imgPromise
-}
-
-function preloadImage(src) {
-	if (typeof document === 'undefined') return Promise.resolve(src)
-
-	return new Promise(async (resolve, reject) => {
-		const img = new Image()
-		img.src = src
-		img.onload = () => resolve(src)
-		img.onerror = reject
-	})
-}
-
-export function getImageUrlForShip(shipId, { size }) {
-	return `/img/ships/${shipId}.webp?size=${size}`
 }

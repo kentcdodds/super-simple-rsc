@@ -8,7 +8,7 @@ import {
 	useTransition,
 } from 'react'
 import { ErrorBoundary } from './error-boundary.js'
-import { getImageUrlForShip } from './utils.js'
+import { getImageUrlForShip } from './img-utils.js'
 import { ShipImg } from './img.js'
 import { RefreshRootContext } from './refresh.js'
 import { useSpinDelay } from './spin-delay.js'

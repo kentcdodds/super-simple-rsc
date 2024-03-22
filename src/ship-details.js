@@ -1,5 +1,5 @@
 import { createElement as h } from 'react'
-import { getImageUrlForShip } from './utils.js'
+import { getImageUrlForShip } from './img-utils.js'
 import { getShip } from '../db/ship-api.js'
 import { ShipImg } from './img.js'
 import { asyncLocalStorage } from '../server/region-async-storage.js'

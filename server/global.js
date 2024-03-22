@@ -48,7 +48,7 @@ app.all('/', async function (req, res, next) {
 	const promiseForData = request(
 		{
 			host: '127.0.0.1',
-			port: 3001,
+			port: process.env.REGION_PORT || 3001,
 			method: req.method,
 			path: req.url,
 			headers: proxiedHeaders,
@@ -79,12 +79,11 @@ app.all('/', async function (req, res, next) {
 			const { pipe } = renderToPipeableStream(React.createElement(Root), {
 				importMap: {
 					imports: {
-						react: 'https://esm.sh/react@experimental?pin=v124&dev',
-						'react-dom': 'https://esm.sh/react-dom@experimental?pin=v124&dev',
-						'react-dom/': 'https://esm.sh/react-dom@experimental&pin=v124&dev/',
+						react: 'https://esm.sh/react@experimental?pin=v125&dev',
+						'react-dom': 'https://esm.sh/react-dom@experimental?pin=v125&dev',
+						'react-dom/': 'https://esm.sh/react-dom@experimental&pin=v125&dev/',
 						'react-error-boundary':
 							'https://esm.sh/react-error-boundary@4.0.12?pin=124&dev',
-						'spin-delay': 'https://esm.sh/spin-delay@1.2.0?pin=124&dev',
 						'react-server-dom-esm/client':
 							'/built_node_modules/react-server-dom-esm/esm/react-server-dom-esm-client.browser.development.js',
 					},
@@ -122,8 +121,9 @@ app.use(express.static('public'))
 app.use('/src', express.static('src'))
 app.use('/built_node_modules', express.static('built_node_modules'))
 
-app.listen(3000, () => {
-	console.log('✅ SSR: http://localhost:3000')
+const port = process.env.PORT || 3000
+app.listen(port, () => {
+	console.log(`✅ SSR: http://localhost:${port}`)
 })
 
 app.on('error', function (error) {

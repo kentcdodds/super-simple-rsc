@@ -2,7 +2,7 @@
 
 import { use, Suspense, createElement as h } from 'react'
 import { ErrorBoundary } from './error-boundary.js'
-import { imgSrc } from './utils.js'
+import { imgSrc } from './img-utils.js'
 
 const shipFallbackSrc = '/img/fallback-ship.png'
 

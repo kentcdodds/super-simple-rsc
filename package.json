@@ -6,12 +6,7 @@
   "description": "Super simple implementation of RSCs with minimal deps",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently npm:dev:*",
-    "dev:global": "node --watch server/global",
-    "dev:region": "node --watch --import ./loader/register-region.js --conditions=react-server server/region",
-    "start": "concurrently npm:start:*",
-    "start:global": "node server/global",
-    "start:region": "node --import ./loader/register-region.js --conditions=react-server server/region"
+    "dev": "node dev.js"
   },
   "imports": {
     "react-server-dom-esm": "./built_node_modules/react-server-dom-esm",
@@ -27,11 +22,11 @@
     "compression": "^1.7.4",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
-    "express": "^4.18.2",
-    "react": "0.0.0-experimental-a9cc32511-20240215",
-    "react-dom": "0.0.0-experimental-a9cc32511-20240215",
-    "react-error-boundary": "^4.0.12",
-    "spin-delay": "^1.2.0"
+    "express": "^4.19.1",
+    "get-port": "^7.1.0",
+    "react": "0.0.0-experimental-670811593-20240322",
+    "react-dom": "0.0.0-experimental-670811593-20240322",
+    "react-error-boundary": "^4.0.13"
   },
   "devDependencies": {
     "prettier": "^3.2.5"

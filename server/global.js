@@ -1,15 +1,16 @@
 // This is a server to host CDN distributed resources like module source files and SSR
 
-import path from 'path'
-import { promises as fs } from 'fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { promises as fs } from 'node:fs'
+import http from 'node:http'
 import compress from 'compression'
 import chalk from 'chalk'
 import express from 'express'
-import http from 'http'
 import React from 'react'
-
 import { renderToPipeableStream } from 'react-dom/server'
 import { createFromNodeStream } from 'react-server-dom-esm/client'
+import { build } from 'esbuild'
 
 const moduleBasePath = new URL('../src', import.meta.url).href
 
@@ -119,7 +120,44 @@ app.all('/', async function (req, res, next) {
 })
 
 app.use(express.static('public'))
-app.use('/src', express.static('src'))
+app.get('/src/*', async (req, res, next) => {
+	if (req.url.includes('..')) {
+		res.sendStatus(403)
+		return
+	}
+
+	const filePath = path.join(
+		fileURLToPath(moduleBasePath),
+		req.url.replace('/src/', ''),
+	)
+	if (filePath.endsWith('.ts') || filePath.endsWith('.tsx')) {
+		try {
+			const result = await build({
+				entryPoints: [filePath],
+				bundle: false,
+				write: false,
+				minify: false,
+				sourcemap: true,
+				format: 'esm',
+			})
+			const code = result.outputFiles[0].text
+			res.type('application/javascript')
+			res.send(code)
+		} catch (error) {
+			console.error(`Failed to compile file: ${filePath}`, error.stack)
+			res.sendStatus(500)
+		}
+	} else {
+		try {
+			const content = await fs.readFile(filePath, 'utf-8')
+			res.type('application/javascript')
+			res.send(content)
+		} catch (error) {
+			console.error(`Failed to read file: ${filePath}`, error.stack)
+			res.sendStatus(500)
+		}
+	}
+})
 app.use('/built_node_modules', express.static('built_node_modules'))
 
 app.listen(3000, () => {

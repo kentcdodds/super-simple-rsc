@@ -21,7 +21,7 @@ export async function Document() {
 				content: 'width=device-width, initial-scale=1',
 			}),
 			h('title', null, 'Super Simple RSC'),
-			h('link', { rel: 'stylesheet', href: '/src/style.css' }),
+			h('link', { rel: 'stylesheet', href: '/style.css' }),
 		),
 		h('body', null, h('div', { className: 'app-wrapper' }, h(App))),
 	)

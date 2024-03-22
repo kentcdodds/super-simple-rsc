@@ -3,7 +3,7 @@ import { getImageUrlForShip } from './utils.js'
 import { getShip } from '../db/ship-api.js'
 import { ShipImg } from './img.js'
 import { asyncLocalStorage } from '../server/region-async-storage.js'
-import { EditableText } from './edit-text.js'
+import { EditableText } from './edit-text.ts'
 import { updateShipName } from './actions.js'
 
 export async function ShipDetails() {

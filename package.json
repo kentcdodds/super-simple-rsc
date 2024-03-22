@@ -27,6 +27,7 @@
     "compression": "^1.7.4",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
+    "esbuild": "^0.20.2",
     "express": "^4.18.2",
     "react": "0.0.0-experimental-a9cc32511-20240215",
     "react-dom": "0.0.0-experimental-a9cc32511-20240215",

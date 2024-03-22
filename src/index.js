@@ -81,4 +81,6 @@ function Shell({ serializedJsx }) {
 	)
 }
 
-ReactDOM.hydrateRoot(document, h(Shell, { serializedJsx }))
+startTransition(() => {
+	ReactDOM.hydrateRoot(document, h(Shell, { serializedJsx }))
+})
